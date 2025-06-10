@@ -48,30 +48,37 @@ describe('Multi-selects with maxOptions', () => {
         it(title + ' selection is limited by maxOptions', () => {
             cy.selectpicker(config).then(($select) => {
                 const button = `[data-id="${$select[0].id}"]`;
+                const menu = () => cy.get(button).parent().find('.dropdown-menu');
+
                 cy.get(button).click();
+                menu().should('be.visible');
                 // $select.on('fetched.bs.select', cy.stub().as('fetched'));
 
                 // maxOptions 1
-                cy.get('li').contains('Option 0-0').click();
-                cy.get('li').contains('Option 0-1').click();
-                cy.get('li').contains('Option 0-0').should('not.have.class', 'selected');
-                cy.get('li').contains('Option 0-1').should('have.class', 'selected');
+                menu().find('li').contains('Option 0-0').click();
+                menu().find('li').contains('Option 0-1').click();
+                menu().find('li').contains('Option 0-0').should('not.have.class', 'selected');
+                menu().find('li').contains('Option 0-1').should('have.class', 'selected');
 
                 // maxOptions 2
-                cy.get('li').contains('Option 1-0').click();
-                cy.get('li').contains('Option 1-1').click();
-                cy.get('li').contains('Option 1-2').click();
-                cy.get('.notify').should('be.visible');
-                cy.get('li').contains('Option 1-0').should('have.class', 'selected');
-                cy.get('li').contains('Option 1-1').should('have.class', 'selected');
-                cy.get('li').contains('Option 1-2').should('not.have.class', 'selected');
+                menu().find('li').contains('Option 1-0').click();
+                menu().find('li').contains('Option 1-1').click();
+                menu().find('li').contains('Option 1-2').click();
+                menu().find('.notify').should('be.visible');
+                menu().find('li').contains('Option 1-0').should('have.class', 'selected');
+                menu().find('li').contains('Option 1-1').should('have.class', 'selected');
+                menu().find('li').contains('Option 1-2').should('not.have.class', 'selected');
 
                 // maxOptions 4 (on select)
-                cy.get('li').contains('Option 2-0').click();
-                cy.get('li').contains('Option 2-1').click();
-                cy.get('.notify').should('be.visible');
-                cy.get('li').contains('Option 2-0').should('have.class', 'selected');
-                cy.get('li').contains('Option 2-1').should('not.have.class', 'selected');
+                // Need to close and re-open the menu to clear the previous notification
+                cy.get(button).click(); // close
+                cy.get(button).click(); // open
+                menu().should('be.visible');
+                menu().find('li').contains('Option 2-0').click();
+                menu().find('li').contains('Option 2-1').click();
+                menu().find('.notify').should('be.visible');
+                menu().find('li').contains('Option 2-0').should('have.class', 'selected');
+                menu().find('li').contains('Option 2-1').should('not.have.class', 'selected');
 
                 cy.get(`#${$select[0].id}`)
                     .invoke('val')

@@ -171,8 +171,8 @@ Limit the number of options that can be selected via the `data-max-options` attr
 Using the `title` attribute will set the default placeholder text when nothing is selected. This works for both multiple and standard select boxes:
 
 <div class="bs-docs-example">
-  <div class="form-group">
-    <label>Multiple</label>
+  <div class="mb-3">
+    <label class="form-label">Multiple</label>
     <select class="selectpicker" multiple title="Choose one of the following..." data-width="fit">
       <option>Mustard</option>
       <option>Ketchup</option>
@@ -180,8 +180,8 @@ Using the `title` attribute will set the default placeholder text when nothing i
     </select>
   </div>
 
-  <div class="form-group">
-    <label>Standard</label>
+  <div class="mb-3">
+    <label class="form-label">Standard</label>
     <select class="selectpicker" title="Choose one of the following..." data-width="fit">
       <option>Mustard</option>
       <option>Ketchup</option>
@@ -273,35 +273,35 @@ The supported values are:
 You can set the button classes via the `data-style` attribute:
 
 <div class="bs-docs-example">
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker" data-style="btn-primary">
       <option>Mustard</option>
       <option>Ketchup</option>
       <option>Relish</option>
     </select>
   </div>
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker" data-style="btn-info">
       <option>Mustard</option>
       <option>Ketchup</option>
       <option>Relish</option>
     </select>
   </div>
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker" data-style="btn-success">
       <option>Mustard</option>
       <option>Ketchup</option>
       <option>Relish</option>
     </select>
   </div>
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker" data-style="btn-warning">
       <option>Mustard</option>
       <option>Ketchup</option>
       <option>Relish</option>
     </select>
   </div>
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker" data-style="btn-danger">
       <option>Mustard</option>
       <option>Ketchup</option>
@@ -414,7 +414,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
 <div class="bs-docs-example">
   <div class="row">
     <div class="col-sm-3">
-      <div class="form-group">
+      <div class="mb-3">
         <select class="selectpicker form-control">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -423,7 +423,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
       </div>
     </div>
     <div class="col-sm-9">
-      <div class="form-group">
+      <div class="mb-3">
         <select class="selectpicker form-control">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -434,7 +434,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
   </div>
   <div class="row">
     <div class="col-sm-4">
-       <div class="form-group">
+       <div class="mb-3">
         <select class="selectpicker form-control">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -443,7 +443,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
       </div>
     </div>
     <div class="col-sm-8">
-       <div class="form-group">
+       <div class="mb-3">
         <select class="selectpicker form-control">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -454,7 +454,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
   </div>
   <div class="row">
     <div class="col-sm-5">
-      <div class="form-group">
+      <div class="mb-3">
         <select class="selectpicker form-control">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -463,7 +463,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
       </div>
     </div>
     <div class="col-sm-7">
-      <div class="form-group">
+      <div class="mb-3">
         <select class="selectpicker form-control">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -477,7 +477,7 @@ Wrap selects in grid columns, or any custom parent element, to easily enforce de
 ```html
 <div class="row">
   <div class="col-sm-3">
-    <div class="form-group">
+    <div class="mb-3">
       <select class="selectpicker form-control">
         <option>Mustard</option>
         <option>Ketchup</option>
@@ -495,8 +495,8 @@ Alternatively, use the `data-width` attribute to set the width of the select. Se
 <div class="bs-docs-example">
   <div class="row">
     <div class="col-sm-12">
-      <div class="form-group">
-        <label><code>width: 'auto'</code></label>
+      <div class="mb-3">
+        <label class="form-label"><code>width: 'auto'</code></label>
         <select class="selectpicker form-control" data-width="auto">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -508,8 +508,8 @@ Alternatively, use the `data-width` attribute to set the width of the select. Se
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <div class="form-group">
-        <label><code>width: 'fit'</code></label>
+      <div class="mb-3">
+        <label class="form-label"><code>width: 'fit'</code></label>
         <select class="selectpicker form-control" data-width="fit">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -521,8 +521,8 @@ Alternatively, use the `data-width` attribute to set the width of the select. Se
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <div class="form-group">
-        <label><code>width: '150px'</code></label>
+      <div class="mb-3">
+        <label class="form-label"><code>width: '150px'</code></label>
         <select class="selectpicker form-control" data-width="150px">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -534,8 +534,8 @@ Alternatively, use the `data-width` attribute to set the width of the select. Se
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <div class="form-group">
-        <label><code>width: '75%'</code></label>
+      <div class="mb-3">
+        <label class="form-label"><code>width: '75%'</code></label>
         <select class="selectpicker form-control" data-width="75%">
           <option>Mustard</option>
           <option>Ketchup</option>
@@ -600,16 +600,16 @@ Insert custom HTML into the option with the `data-content` attribute:
 
 <div class="bs-docs-example">
   <select class="selectpicker">
-    <option data-content="<span class='badge badge-warning'>Mustard</span>">Mustard</option>
-    <option data-content="<span class='badge badge-danger label-important'>Ketchup</span>">Ketchup</option>
-    <option data-content="<span class='badge badge-success'>Relish</span>">Relish</option>
-    <option data-content="<span class='badge badge-info'>Mayonnaise</span>">Mayonnaise</option>
+    <option data-content="<span class='badge bg-warning'>Mustard</span>">Mustard</option>
+    <option data-content="<span class='badge bg-danger'>Ketchup</span>">Ketchup</option>
+    <option data-content="<span class='badge bg-success'>Relish</span>">Relish</option>
+    <option data-content="<span class='badge bg-info'>Mayonnaise</span>">Mayonnaise</option>
   </select>
 </div>
 
 ```html
 <select class="selectpicker">
-  <option data-content="<span class='badge badge-success'>Relish</span>">Relish</option>
+  <option data-content="<span class='badge bg-success'>Relish</span>">Relish</option>
 </select>
 ```
 
@@ -617,7 +617,7 @@ Insert custom HTML into the option with the `data-content` attribute:
 Add subtext to an option or optgroup with the `data-subtext` attribute:
 
 <div class="bs-docs-example">
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker">
       <option data-subtext="French's">Mustard</option>
       <option data-subtext="Heinz">Ketchup</option>
@@ -631,7 +631,7 @@ Add subtext to an option or optgroup with the `data-subtext` attribute:
     </select>
   </div>
 
-  <div class="form-group">
+  <div class="mb-3">
     <select class="selectpicker" data-show-subtext="true">
       <option data-subtext="French's">Mustard</option>
       <option data-subtext="Heinz">Ketchup</option>
@@ -643,7 +643,7 @@ Add subtext to an option or optgroup with the `data-subtext` attribute:
       <option data-subtext="Sweet & Spicy">Tabasco</option>
       <option data-subtext="Chunky">Salsa</option>
     </select>
-    <span class="help-block">With <code>showSubtext</code> set to true.</span>
+    <span class="form-text">With <code>showSubtext</code> set to true.</span>
   </div>
 </div>
 

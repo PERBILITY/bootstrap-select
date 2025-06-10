@@ -4,7 +4,7 @@
 
 ## Quick start
 
-Bootstrap-select requires jQuery v1.9.1+, Bootstrap’s dropdown.js component, and Bootstrap's CSS. If you're not already using Bootstrap in your project, a precompiled version of the Bootstrap v3.4.1 minimum requirements can be downloaded [here](https://getbootstrap.com/docs/3.4/customize/?id=7830063837006f6fc84f). If using bootstrap-select with Bootstrap v4+, you'll also need Popper.js. For all of Bootstrap v4's requirements, see [Getting started](https://getbootstrap.com/docs/4.1/getting-started/introduction/). A precompiled version of the requirements will be made available in an upcoming release of bootstrap-select.
+Bootstrap-select requires jQuery v1.9.1+ and Bootstrap 5 (which includes Popper.js). Bootstrap's CSS and JS (dropdown component) are necessary. For Bootstrap 5's requirements, see its [official documentation](https://getbootstrap.com/docs/5.3/getting-started/introduction/).
 
 Several quick start options are available:
 
@@ -35,9 +35,9 @@ Several quick start options are available:
 # Usage
 
 ---
-<div class="card border-warning">
+<div class="card border-info">
 	<div class="card-body">
-		Bootstrap 4 only works with bootstrap-select v1.13.0+. By default, bootstrap-select automatically detects the version of Bootstrap being used. However, there are some instances where the version detection won't work. See the [documentation](https://developer.snapappointments.com/bootstrap-select/options/#bootstrap-version) for more information.
+		This version of bootstrap-select is being updated for Bootstrap 5. By default, bootstrap-select automatically detects the version of Bootstrap being used. However, there are some instances where the version detection won't work. See the [documentation](https://developer.snapappointments.com/bootstrap-select/options/#bootstrap-version) for more information regarding Bootstrap version detection.
 	</div>
 </div>
 

@@ -110,9 +110,11 @@ describe('Single selects with search', () => {
             cy.selectpicker(config).then(($select) => {
                 const button = `[data-id="${$select[0].id}"]`;
                 cy.get(button).click();
+                // Ensure the dropdown menu is visible before interacting with it
+                cy.get(button).parent().find('.dropdown-menu').should('be.visible');
                 $select.on('fetched.bs.select', cy.stub().as('fetched'));
 
-                cy.get('input').type('option 4');
+                cy.get(button).parent().find('input').type('option 4');
 
                 if (config?.source?.search) {
                     cy.get('@fetched').its('callCount').should('equal', 8);
@@ -122,15 +124,22 @@ describe('Single selects with search', () => {
                     expect($el).to.contain('Option 4')
                 });
 
-                cy.get('.dropdown-menu').find('li').first().click();
-                cy.get(button).contains('Option 4').click();
+                cy.get(button).parent().find('.dropdown-menu').find('li').first().click();
+                // After selecting an item, the menu might close and re-open or just update
+                // Re-click the button to ensure menu is open if needed, then check visibility
+                cy.get(button).contains('Option 4'); // Check button text updated
+                cy.get(button).click(); // Open menu again
+                cy.get(button).parent().find('.dropdown-menu').should('be.visible');
 
-                cy.get('li').contains('Option 4').should('have.class', 'active');
+                cy.get(button).parent().find('.dropdown-menu').find('li').contains('Option 4').should('have.class', 'active');
 
-                cy.get('li').contains('Option 9').click();
-                cy.get(button).contains('Option 9').click();
-                cy.get('li').contains('Option 9').should('have.class', 'active');
-                cy.get('li').contains('Option 4').should('not.have.class', 'active');
+                cy.get(button).parent().find('.dropdown-menu').find('li').contains('Option 9').click();
+                // Re-click the button to ensure menu is open if needed, then check visibility
+                cy.get(button).contains('Option 9'); // Check button text updated
+                cy.get(button).click(); // Open menu again
+                cy.get(button).parent().find('.dropdown-menu').should('be.visible');
+                cy.get(button).parent().find('.dropdown-menu').find('li').contains('Option 9').should('have.class', 'active');
+                cy.get(button).parent().find('.dropdown-menu').find('li').contains('Option 4').should('not.have.class', 'active');
             });
         });
     });

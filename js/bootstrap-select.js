@@ -617,31 +617,32 @@
   };
 
   // eslint-disable-next-line no-undef
-  var Dropdown = window.Dropdown || bootstrap.Dropdown;
-
-  function getVersion () {
-    var version;
-
-    try {
-      version = $.fn.dropdown.Constructor.VERSION;
-    } catch (err) {
-      version = Dropdown.VERSION;
-    }
-
-    return version;
-  }
+  var BsDropdown; // Global Bootstrap Dropdown instance for BS5+
 
   var version = {
     success: false,
-    major: '3'
+    major: '3' // Default to Bootstrap 3
   };
 
   try {
-    version.full = (getVersion() || '').split(' ')[0].split('.');
-    version.major = version.full[0];
-    version.success = true;
+    // Try to detect Bootstrap 5+
+    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION) {
+      BsDropdown = bootstrap.Dropdown; // Store BS5 Dropdown
+      version.full = bootstrap.Tooltip.VERSION.split(' ')[0].split('.');
+    } else if ($.fn.dropdown && $.fn.dropdown.Constructor && $.fn.dropdown.Constructor.VERSION) {
+      // Fallback for Bootstrap 4
+      version.full = $.fn.dropdown.Constructor.VERSION.split(' ')[0].split('.');
+    }
+    // Note: BS3 detection would rely on jQuery plugin presence without specific version object,
+    // already defaulted by version.major = '3'
+
+    if (version.full) {
+      version.major = version.full[0];
+      version.success = true;
+    }
   } catch (err) {
-    // do nothing
+    // Unable to detect version; keep default '3'
+    // console.warn('Failed to detect Bootstrap version. Defaulting to Bootstrap 3.', err);
   }
 
   var selectId = 0;
@@ -665,7 +666,7 @@
 
   var Selector = {
     MENU: '.' + classNames.MENU,
-    DATA_TOGGLE: 'data-toggle="dropdown"'
+    DATA_TOGGLE: 'data-bs-toggle="dropdown"'
   };
 
   var elementTemplates = {
@@ -1050,7 +1051,9 @@
       this.checkDisabled();
       this.clickListener();
 
-      if (version.major > 4) this.dropdown = new Dropdown(this.$button[0]);
+      if (version.major > 4 && BsDropdown) {
+        this.dropdown = new BsDropdown(this.$button[0]);
+      }
 
       if (this.options.liveSearch) {
         this.liveSearchListener();
@@ -3570,23 +3573,32 @@
     return this;
   };
 
-  // get Bootstrap's keydown event handler for either Bootstrap 4 or Bootstrap 3
-  function keydownHandler () {
-    if (version.major < 5) {
-      if ($.fn.dropdown) {
-        // wait to define until function is called in case Bootstrap isn't loaded yet
-        var bootstrapKeydown = $.fn.dropdown.Constructor._dataApiKeydownHandler || $.fn.dropdown.Constructor.prototype.keydown;
-        return bootstrapKeydown.apply(this, arguments);
-      }
-    } else {
-      return Dropdown.dataApiKeydownHandler;
+  // get Bootstrap's keydown event handler for Bootstrap 3 & 4
+  // For BS5, native handling via data-bs-toggle is preferred.
+  function keydownHandler (e) {
+    if (version.major < 5 && $.fn.dropdown) {
+      // wait to define until function is called in case Bootstrap isn't loaded yet
+      var bootstrapKeydown = $.fn.dropdown.Constructor._dataApiKeydownHandler || $.fn.dropdown.Constructor.prototype.keydown;
+      return bootstrapKeydown.apply(this, arguments);
     }
+    // For BS5, do not interfere with native keydown handling for external dropdowns.
+    // If this function is still called for BS5 (e.g. for non-bootstrap-select elements),
+    // it should not attempt to call a BS4-specific handler.
+    // Bootstrap 5's Dropdown.dataApiKeydownHandler is static and might not be suitable here directly
+    // without knowing the context `this` refers to.
+    // The event listeners below are specific to non-bootstrap-select elements.
+  }
+
+  // Let Bootstrap 5 handle its own keydown events on dropdowns.
+  // This plugin should only attach its custom keydown for `.bootstrap-select` elements.
+  if (version.major < 5) {
+    $(document)
+      .off('keydown.bs.dropdown.data-api') // Clear previous handlers if any
+      .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > [' + Selector.DATA_TOGGLE + ']', keydownHandler)
+      .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > .dropdown-menu', keydownHandler);
   }
 
   $(document)
-    .off('keydown.bs.dropdown.data-api')
-    .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > [' + Selector.DATA_TOGGLE + ']', keydownHandler)
-    .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > .dropdown-menu', keydownHandler)
     .on('keydown' + EVENT_KEY, '.bootstrap-select [' + Selector.DATA_TOGGLE + '], .bootstrap-select [role="listbox"], .bootstrap-select .bs-searchbox input', Selectpicker.prototype.keydown)
     .on('focusin.modal', '.bootstrap-select [' + Selector.DATA_TOGGLE + '], .bootstrap-select [role="listbox"], .bootstrap-select .bs-searchbox input', function (e) {
       e.stopPropagation();

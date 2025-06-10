@@ -27,7 +27,7 @@ ul.nav li.main {
 }
 
 div.source-links {
-    float: right;
+    float: end;
 }
 
 /*
@@ -40,10 +40,6 @@ div.source-links {
 /* By default it's not affixed in mobile views, so undo that */
 .bs-sidebar {
     position: static;
-}
-
-.bs-sidebar.well {
-    padding: 0;
 }
 
 /* First level of nav */
@@ -82,7 +78,7 @@ div.source-links {
 .bs-sidebar .nav .nav > li > a {
     padding-top:    3px;
     padding-bottom: 3px;
-    padding-left: 30px;
+    padding-inline-start: 30px;
     font-size: 90%;
 }
 

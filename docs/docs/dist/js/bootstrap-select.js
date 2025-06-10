@@ -1,7 +1,7 @@
 /*!
  * Bootstrap-select v1.14.0-beta3 (https://developer.snapappointments.com/bootstrap-select)
  *
- * Copyright 2012-2022 SnapAppointments, LLC
+ * Copyright 2012-2025 SnapAppointments, LLC
  * Licensed under MIT (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)
  */
 
@@ -689,7 +689,7 @@
 
   var Selector = {
     MENU: '.' + classNames.MENU,
-    DATA_TOGGLE: 'data-toggle="dropdown"'
+    DATA_TOGGLE: 'data-bs-toggle="dropdown"'
   };
 
   var elementTemplates = {
