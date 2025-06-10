@@ -641,31 +641,32 @@
   };
 
   // eslint-disable-next-line no-undef
-  var Dropdown = window.Dropdown || bootstrap.Dropdown;
-
-  function getVersion () {
-    var version;
-
-    try {
-      version = $.fn.dropdown.Constructor.VERSION;
-    } catch (err) {
-      version = Dropdown.VERSION;
-    }
-
-    return version;
-  }
+  var BsDropdown; // Global Bootstrap Dropdown instance for BS5+
 
   var version = {
     success: false,
-    major: '3'
+    major: '3' // Default to Bootstrap 3
   };
 
   try {
-    version.full = (getVersion() || '').split(' ')[0].split('.');
-    version.major = version.full[0];
-    version.success = true;
+    // Try to detect Bootstrap 5+
+    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION) {
+      BsDropdown = bootstrap.Dropdown; // Store BS5 Dropdown
+      version.full = bootstrap.Tooltip.VERSION.split(' ')[0].split('.');
+    } else if ($.fn.dropdown && $.fn.dropdown.Constructor && $.fn.dropdown.Constructor.VERSION) {
+      // Fallback for Bootstrap 4
+      version.full = $.fn.dropdown.Constructor.VERSION.split(' ')[0].split('.');
+    }
+    // Note: BS3 detection would rely on jQuery plugin presence without specific version object,
+    // already defaulted by version.major = '3'
+
+    if (version.full) {
+      version.major = version.full[0];
+      version.success = true;
+    }
   } catch (err) {
-    // do nothing
+    // Unable to detect version; keep default '3'
+    // console.warn('Failed to detect Bootstrap version. Defaulting to Bootstrap 3.', err);
   }
 
   var selectId = 0;
@@ -1074,7 +1075,9 @@
       this.checkDisabled();
       this.clickListener();
 
-      if (version.major > 4) this.dropdown = new Dropdown(this.$button[0]);
+      if (version.major > 4 && BsDropdown) {
+        this.dropdown = new BsDropdown(this.$button[0]);
+      }
 
       if (this.options.liveSearch) {
         this.liveSearchListener();
@@ -3474,64 +3477,61 @@
   // SELECTPICKER PLUGIN DEFINITION
   // ==============================
   function Plugin (option) {
-    // get the args of the outer function..
     var args = arguments;
-    // The arguments of the function are explicitly re-defined from the argument list, because the shift causes them
-    // to get lost/corrupted in android 2.3 and IE9 #715 #775
     var _option = option;
 
     [].shift.apply(args);
 
-    // if the version was not set successfully
-    if (!version.success) {
-      // try to retreive it again
-      try {
-        version.full = (getVersion() || '').split(' ')[0].split('.');
-      } catch (err) {
-        // fall back to use BootstrapVersion if set
-        if (Selectpicker.BootstrapVersion) {
-          version.full = Selectpicker.BootstrapVersion.split(' ')[0].split('.');
-        } else {
-          version.full = [version.major, '0', '0'];
-
-          console.warn(
-            'There was an issue retrieving Bootstrap\'s version. ' +
-            'Ensure Bootstrap is being loaded before bootstrap-select and there is no namespace collision. ' +
-            'If loading Bootstrap asynchronously, the version may need to be manually specified via $.fn.selectpicker.Constructor.BootstrapVersion.',
-            err
-          );
+    // version detection (already done at the top, this is a fallback/override check)
+    if (!version.success) { // Check if initial detection succeeded
+      if (Selectpicker.BootstrapVersion) { // Check for manual override
+        try {
+          var bsVersionParts = Selectpicker.BootstrapVersion.split(' ')[0].split('.');
+          version.major = bsVersionParts[0];
+          version.full = bsVersionParts;
+          version.success = true;
+        } catch (err) {
+          console.warn('Failed to parse Selectpicker.BootstrapVersion. Defaulting to Bootstrap 3.', err);
+          version.major = '3'; // Ensure default on failure
+          version.success = false; // Mark as failed manual override
         }
       }
-
-      version.major = version.full[0];
-      version.success = true;
+      // If still no success (auto-detection failed AND manual override failed/not present),
+      // it will operate as BS3 (version.major is '3' by default).
+      // We ensure success is true so this block isn't re-entered unnecessarily and plugin can initialize.
+      if (!version.success) { // This if ensures we only set to BS3 if manual override also failed
+        version.major = '3';
+      }
+      version.success = true; // Finalize version check for this Plugin instance
     }
 
-    if (version.major >= '4') {
-      // some defaults need to be changed if using Bootstrap 4
-      // check to see if they have already been manually changed before forcing them to update
-      var toUpdate = [];
-
-      if (Selectpicker.DEFAULTS.style === classNames.BUTTONCLASS) toUpdate.push({ name: 'style', className: 'BUTTONCLASS' });
-      if (Selectpicker.DEFAULTS.iconBase === classNames.ICONBASE) toUpdate.push({ name: 'iconBase', className: 'ICONBASE' });
-      if (Selectpicker.DEFAULTS.tickIcon === classNames.TICKICON) toUpdate.push({ name: 'tickIcon', className: 'TICKICON' });
-
+    if (version.major === '4' || version.major === '5') { // Simplified check for BS4 and BS5
+      // Common class name changes for Bootstrap 4 & 5
       classNames.DIVIDER = 'dropdown-divider';
-      classNames.SHOW = 'show';
-      classNames.BUTTONCLASS = 'btn-light';
-      classNames.POPOVERHEADER = 'popover-header';
-      classNames.ICONBASE = '';
-      classNames.TICKICON = 'bs-ok-default';
+      classNames.SHOW = 'show'; // BS4 uses 'show', BS3 used 'open' which is already default in classNames
+      classNames.BUTTONCLASS = 'btn-light'; // Common default for BS4/5
+      classNames.POPOVERHEADER = 'popover-header'; // BS4/5
+      classNames.ICONBASE = ''; // BS4/5 don't use glyphicon base by default
+      classNames.TICKICON = 'bs-ok-default'; // Custom tick icon
+
+      // Update DEFAULTS if they are still the original BS3 values
+      var toUpdate = [];
+      if (Selectpicker.DEFAULTS.style === 'btn-default') toUpdate.push({ name: 'style', className: 'BUTTONCLASS' }); // classNames.BUTTONCLASS is now btn-light
+      if (Selectpicker.DEFAULTS.iconBase === 'glyphicon') toUpdate.push({ name: 'iconBase', className: 'ICONBASE' });
+      if (Selectpicker.DEFAULTS.tickIcon === 'glyphicon-ok') toUpdate.push({ name: 'tickIcon', className: 'TICKICON' });
 
       for (var i = 0; i < toUpdate.length; i++) {
-        var option = toUpdate[i];
-        Selectpicker.DEFAULTS[option.name] = classNames[option.className];
+        var item = toUpdate[i]; // Changed 'option' to 'item' to avoid conflict with outer 'option'
+        Selectpicker.DEFAULTS[item.name] = classNames[item.className];
       }
     }
 
-    if (version.major > '4') {
+    if (version.major === '5') { // Specifically for Bootstrap 5
       Selector.DATA_TOGGLE = 'data-bs-toggle="dropdown"';
+    } else if (version.major === '4') { // Specifically for Bootstrap 4
+      Selector.DATA_TOGGLE = 'data-toggle="dropdown"';
     }
+    // For BS3, Selector.DATA_TOGGLE would remain its default 'data-toggle="dropdown"' if not overridden by BS4 logic
 
     var value;
     var chain = this.each(function () {
@@ -3594,23 +3594,32 @@
     return this;
   };
 
-  // get Bootstrap's keydown event handler for either Bootstrap 4 or Bootstrap 3
-  function keydownHandler () {
-    if (version.major < 5) {
-      if ($.fn.dropdown) {
-        // wait to define until function is called in case Bootstrap isn't loaded yet
-        var bootstrapKeydown = $.fn.dropdown.Constructor._dataApiKeydownHandler || $.fn.dropdown.Constructor.prototype.keydown;
-        return bootstrapKeydown.apply(this, arguments);
-      }
-    } else {
-      return Dropdown.dataApiKeydownHandler;
+  // get Bootstrap's keydown event handler for Bootstrap 3 & 4
+  // For BS5, native handling via data-bs-toggle is preferred.
+  function keydownHandler (e) {
+    if (version.major < 5 && $.fn.dropdown) {
+      // wait to define until function is called in case Bootstrap isn't loaded yet
+      var bootstrapKeydown = $.fn.dropdown.Constructor._dataApiKeydownHandler || $.fn.dropdown.Constructor.prototype.keydown;
+      return bootstrapKeydown.apply(this, arguments);
     }
+    // For BS5, do not interfere with native keydown handling for external dropdowns.
+    // If this function is still called for BS5 (e.g. for non-bootstrap-select elements),
+    // it should not attempt to call a BS4-specific handler.
+    // Bootstrap 5's Dropdown.dataApiKeydownHandler is static and might not be suitable here directly
+    // without knowing the context `this` refers to.
+    // The event listeners below are specific to non-bootstrap-select elements.
+  }
+
+  // Let Bootstrap 5 handle its own keydown events on dropdowns.
+  // This plugin should only attach its custom keydown for `.bootstrap-select` elements.
+  if (version.major < 5) {
+    $(document)
+      .off('keydown.bs.dropdown.data-api') // Clear previous handlers if any
+      .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > [' + Selector.DATA_TOGGLE + ']', keydownHandler)
+      .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > .dropdown-menu', keydownHandler);
   }
 
   $(document)
-    .off('keydown.bs.dropdown.data-api')
-    .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > [' + Selector.DATA_TOGGLE + ']', keydownHandler)
-    .on('keydown.bs.dropdown.data-api', ':not(.bootstrap-select) > .dropdown-menu', keydownHandler)
     .on('keydown' + EVENT_KEY, '.bootstrap-select [' + Selector.DATA_TOGGLE + '], .bootstrap-select [role="listbox"], .bootstrap-select .bs-searchbox input', Selectpicker.prototype.keydown)
     .on('focusin.modal', '.bootstrap-select [' + Selector.DATA_TOGGLE + '], .bootstrap-select [role="listbox"], .bootstrap-select .bs-searchbox input', function (e) {
       e.stopPropagation();
