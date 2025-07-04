@@ -308,7 +308,6 @@
     var selectedOptions = options.filter(function (item) {
       if (item.selected) {
         return !(this.options.hideDisabled && item.disabled);
-
       }
 
       return false;
@@ -2964,7 +2963,7 @@
 
       this.$searchbox.on('input propertychange', function () {
         var searchValue = that.$searchbox[0].value;
-        if ( !(/^\S+$/g.test(searchValue)) ) {
+        if (!(/^\S+$/g.test(searchValue))) {
           that.$searchbox[0].value = '';
           searchValue = false;
         }
@@ -3185,7 +3184,6 @@
 
       that.focusItem(hoverLi, hoverData);
       that.activeElement = hoverLi;
-
     },
 
     keydown: function (e) {

@@ -310,6 +310,11 @@ select.selectpicker {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.bootstrap-select .dropdown-menu .dropdown-menu-inner {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 .bootstrap-select .dropdown-menu li {
   position: relative;
 }
