@@ -2701,6 +2701,8 @@
         }
       }
 
+      that.setSize();
+
       this.$button.on('click.bs.dropdown.data-api', function (e) {
         if (that.options.allowClear) {
           var target = e.target,
