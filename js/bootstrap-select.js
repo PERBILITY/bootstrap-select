@@ -1538,6 +1538,9 @@
           a.setAttribute('aria-posinset', liData.posinset);
 
           if (noStyle !== true) {
+            if (typeof this.focusedParent === 'undefined') {
+              this.focusedParent = this.$menuInner[0];
+            }
             this.focusedParent.setAttribute('aria-activedescendant', a.id);
             li.classList.add('active');
             a.classList.add('active');
