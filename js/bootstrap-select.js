@@ -1849,6 +1849,7 @@
 
             if (liElement.firstChild) {
               liElement.firstChild.id = that.selectId + '-' + item.index;
+              liElement.firstChild.setAttribute('aria-label', item.text);
             }
 
             break;
