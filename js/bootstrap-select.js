@@ -1534,6 +1534,8 @@
         var a = li.firstChild;
 
         if (a) {
+
+          a.setAttribute('aria-current', true);
           a.setAttribute('aria-setsize', this.selectpicker.view.size);
           a.setAttribute('aria-posinset', liData.posinset);
 
@@ -1552,7 +1554,10 @@
     defocusItem: function (li) {
       if (li) {
         li.classList.remove('active');
-        if (li.firstChild) li.firstChild.classList.remove('active');
+        if (li.firstChild) {
+          li.firstChild.classList.remove('active');
+          li.firstChild.removeAttribute('aria-current');
+        }
       }
     },
 
