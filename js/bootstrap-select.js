@@ -1240,7 +1240,7 @@
             searchbox +
             actionsbox +
             '<div class="inner ' + classNames.SHOW + '" role="listbox" id="' + this.selectId + '" tabindex="-1" ' + multiselectable + '>' +
-                '<ul class="' + classNames.MENUINNER + ' inner ' + (version.major >= '4' ? classNames.SHOW : '') + '" role="presentation">' +
+                '<ul class="' + classNames.MENUINNER + ' inner ' + (version.major >= '4' ? classNames.SHOW : '') + '">' +
                 '</ul>' +
             '</div>' +
             donebutton +
